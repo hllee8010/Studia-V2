@@ -2911,7 +2911,8 @@ function _reqSignature(system,messages){
 }
 
 // Edge Function 엔드포인트 — 서버가 API 키를 쥐고 Anthropic 으로 프록시한다.
-var AI_PROXY_URL=SUPABASE_URL+'/functions/v1/ai-proxy';
+// SUPABASE_URL 이 아래 다른 블록에서 선언되므로, 호출 시점에 평가되도록 함수로 감싼다.
+function _studiaAiProxyUrl(){ return SUPABASE_URL+'/functions/v1/ai-proxy'; }
 
 // 현재 컨텍스트 (선택) — 과목/기능을 usage_logs 에 기록하기 위한 힌트.
 // 각 화면에서 window.Studia._ctx.subject/feature 로 설정하면 자동으로 전송된다.
@@ -2961,7 +2962,7 @@ function callAPI(system,messages,maxTokens,opts){
             subject:opts.subject||ctx.subject||null,
             feature:opts.feature||ctx.feature||null
         };
-        return fetch(AI_PROXY_URL,{
+        return fetch(_studiaAiProxyUrl(),{
             method:'POST',
             headers:{
                 'Content-Type':'application/json',
