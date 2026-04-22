@@ -9841,21 +9841,26 @@ var Chat={
     }
 
     function showConsent(){
+        // 다른 모든 .screen 을 숨기고 screenConsent 만 활성화
+        // (이전 버전에서는 screenSetup 만 대상으로 했으나, Week 2 이후 초기 화면이 screenAuth 로 바뀌어
+        //  두 화면이 동시에 보이는 문제가 있었음. 모든 screen 을 비활성화하는 방식으로 수정.)
         var sc=document.getElementById('screenConsent');
-        var setup=document.getElementById('screenSetup');
-        if(!sc || !setup) return;
-        setup.classList.remove('active');
+        if(!sc) return;
+        var all=document.querySelectorAll('.screen');
+        for(var i=0;i<all.length;i++) all[i].classList.remove('active');
         sc.classList.add('active');
     }
     function hideConsent(){
+        // 동의 화면을 닫고 로그인(screenAuth) 화면으로 복귀
         var sc=document.getElementById('screenConsent');
-        var setup=document.getElementById('screenSetup');
-        if(!sc || !setup) return;
-        sc.classList.remove('active');
-        setup.classList.add('active');
-        // 기존 setup의 포커스/입력 복원
-        var apiIn=document.getElementById('apiKeyInput');
-        if(apiIn) try{apiIn.focus();}catch(e){}
+        var auth=document.getElementById('screenAuth');
+        if(!sc || !auth) return;
+        var all=document.querySelectorAll('.screen');
+        for(var i=0;i<all.length;i++) all[i].classList.remove('active');
+        auth.classList.add('active');
+        // 이메일 입력란 포커스 (있다면)
+        var emailIn=document.getElementById('authEmail')||document.getElementById('emailInput');
+        if(emailIn) try{emailIn.focus();}catch(e){}
     }
 
     function updateAcceptState(){
